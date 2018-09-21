@@ -2,52 +2,85 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link, graphql } from 'gatsby'
 
+
 import Layout from '../components/Layout'
 import Hero from '../components/home/hero';
+import PostPreview from '../components/home/PostPreview';
+import Filters from '../components/home/Filters';
+
+const _ = require('lodash');
 
 export default class IndexPage extends React.Component {
-	render() {
-	
-	const { data } = this.props
-	const { edges: posts } = data.allMarkdownRemark
+	constructor(props){
+		super(props);
 
-	return (
-		<Layout>
-			<section className="section">
-				<Hero />
-		  		<div className="container">
-					<div className="content">
-			  			<h1 className="has-text-weight-bold is-size-2">Latest Stories</h1>
-					</div>
-					{posts
-						.map(({ node: post }) => (
-							<div
-							className="content"
-							style={{ border: '1px solid #eaecee', padding: '2em 4em' }}
-							key={post.id}
-							>
-							<p>
-								<Link className="has-text-primary" to={post.fields.slug}>
-								{post.frontmatter.title}
-								</Link>
-								<span> &bull; </span>
-								<small>{post.frontmatter.date}</small>
-							</p>
-							<p>
-								{post.excerpt}
-								<br />
-								<br />
-								<Link className="button is-small" to={post.fields.slug}>
-								Keep Reading →
-								</Link>
-							</p>
-							</div>
+		this.state = {
+			activeTags: []
+		}
+
+		this.handleTagClick = this.handleTagClick.bind(this);
+	}
+
+	handleTagClick = (tag, add) => {
+		let tags = [...this.state.activeTags];
+		if(add){
+			tags.push(tag);
+		} else {
+			const index = tags.indexOf(tag);
+			tags.splice(index, 1);
+		}
+		this.setState({
+			activeTags: tags
+		});
+	}
+
+	getAllTags = (posts) => {
+		let tags = []
+				// Iterate through each post, putting all found tags into `tags`
+		posts.forEach(edge => {
+			if (_.get(edge, `node.frontmatter.tags`)) {
+				tags = tags.concat(edge.node.frontmatter.tags)
+			}
+		});
+				// Eliminate duplicate tags
+		tags = _.uniq(tags);
+		return tags;
+	}
+
+	filterPosts = (posts) => {
+		const { activeTags } = this.state;
+		if(activeTags.length < 1){
+			return posts;
+		}
+
+		return posts.filter((post) => {
+			return activeTags.some(tag => {
+				return post.node.frontmatter.tags.indexOf(tag) > -1;
+			})
+		});
+	}
+
+	render() {
+		const { data } = this.props
+		let { edges: posts } = data.allMarkdownRemark
+		const tags = this.getAllTags(posts);
+		posts = this.filterPosts(posts);
+
+		return (
+			<Layout>
+				<section className="section">
+					<Hero />
+					<div className="container posts-container">
+						<Filters data={tags} activeTags={this.state.activeTags} handler={this.handleTagClick} />
+						{posts
+							.map(({ node: post }) => (
+									<PostPreview data={post} />
 						))}
-		  			</div>
+					</div>
 				</section>
 			</Layout>
 		)
-  	}
+  }
 }
 
 IndexPage.propTypes = {
@@ -66,7 +99,7 @@ export const pageQuery = graphql`
 	) {
 	  edges {
 		node {
-		  excerpt(pruneLength: 400)
+		  excerpt(pruneLength: 200)
 		  id
 		  fields {
 			slug
@@ -75,6 +108,7 @@ export const pageQuery = graphql`
 			title
 			templateKey
 			date(formatString: "MMMM DD, YYYY")
+			tags
 		  }
 		}
 	  }
