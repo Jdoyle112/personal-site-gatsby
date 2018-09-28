@@ -16,7 +16,7 @@ const Footer = () => (
                         Work
                     </li>
                     <li>
-                        Contact
+                        <a href="mailto:jdoyle112@gmail.com">Contact</a>
                     </li>
                 </ul>
             </div>

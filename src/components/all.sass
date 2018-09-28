@@ -41,6 +41,10 @@ $primary-invert: $kaldi-red-invert
 
 /*@import "~bulma"*/
 
+html 
+  position: relative;
+  min-height: 100%;
+
 body 
   margin: 0;
 
@@ -101,8 +105,10 @@ span.light
 
 
 .filters-container 
-  padding: 20px 0;
+  @media (max-width: 700px)
+    margin-bottom: 15px;
   .tag 
+    margin-bottom: 10px;
     display: inline-block;
     padding: 6px 12px;
     color: #2f2fa2;
@@ -117,10 +123,26 @@ span.light
   
 .posts-container
   max-width: 850px;
+  .grid 
+    padding: 20px 0;
+    display: grid;
+    grid-template-columns: auto 225px;
+    grid-column-gap: 40px;
+    @media (max-width: 700px)
+      margin-bottom: 20px;
+      display: block !important;
+    
+
+
+.main-container 
+  padding-bottom: 80px;
 
 .footer
   padding: 15px 40px;
-  margin-top: 60px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   ul
     list-style: none;
     margin: 0;
@@ -139,7 +161,9 @@ span.light
       display: grid;
       grid-template-columns: 250px auto;
       grid-column-gap: 40px;
-
+      @media(max-width: 800px)
+        display: block !important;
+      
       .content
         h1
           font-size: 40px;
@@ -169,6 +193,8 @@ span.light
               text-decoration: none;
 
       .sidebar
+        @media(max-width: 800px)
+          display: none;
         ul
           padding: 0;
           margin: 0;
@@ -179,4 +205,22 @@ span.light
             cursor: pointer;
             p
               margin: 0 0 5px;
+
+
+.search-container
+  input
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 1em 1em;
+    color: #30373b;
+    font-size: 14px;
+    -webkit-box-shadow: 0 0 0 1px #c4cdd5;
+    box-shadow: 0 0 0 1px #c4cdd5;
+    border: 0;
+    border-radius: 3px;
+    background-color: #ffffff;
+    -webkit-transition: padding 150ms;
+    transition: padding 150ms;
+    -webkit-appearance: none;
 

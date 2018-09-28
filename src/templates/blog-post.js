@@ -6,6 +6,7 @@ import { graphql, Link } from 'gatsby'
 import Layout from '../components/Layout'
 import Content, { HTMLContent } from '../components/Content'
 import Sidebar from '../components/post/sidebar'
+import { DiscussionEmbed } from "disqus-react";
 
 export const BlogPostTemplate = ({
   content,
@@ -14,9 +15,15 @@ export const BlogPostTemplate = ({
   tags,
   title,
   helmet,
-  date
+  date,
+  id
 }) => {
-  const PostContent = contentComponent || Content
+  const PostContent = contentComponent || Content;
+  const disqusShortname = "jack-doyle";
+  const disqusConfig = {
+    identifier: id,
+    title: title,
+  };
   return (
     <section className="section blog-post">
       {helmet || ''}
@@ -44,6 +51,7 @@ export const BlogPostTemplate = ({
                 </ul>
               </div>
             ) : null}
+            <DiscussionEmbed shortname={disqusShortname} config={disqusConfig} />
           </div>
         </div>
       </div>
@@ -57,7 +65,8 @@ BlogPostTemplate.propTypes = {
   description: PropTypes.string,
   title: PropTypes.string,
   helmet: PropTypes.instanceOf(Helmet),
-  date: PropTypes.string
+  date: PropTypes.string,
+  id: PropTypes.identifier
 }
 
 const BlogPost = ({ data }) => {
@@ -73,6 +82,7 @@ const BlogPost = ({ data }) => {
         tags={post.frontmatter.tags}
         title={post.frontmatter.title}
         date={post.frontmatter.date}
+        id={post.id}
       />
     </Layout>
   )

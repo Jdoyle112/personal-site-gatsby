@@ -7,6 +7,7 @@ import Layout from '../components/Layout'
 import Hero from '../components/home/hero';
 import PostPreview from '../components/home/PostPreview';
 import Filters from '../components/home/Filters';
+import Search from '../components/home/Search';
 
 const _ = require('lodash');
 
@@ -15,10 +16,18 @@ export default class IndexPage extends React.Component {
 		super(props);
 
 		this.state = {
-			activeTags: []
+			activeTags: [],
+			searchTxt: ''
 		}
 
 		this.handleTagClick = this.handleTagClick.bind(this);
+		this.handleSearchChange = this.handleSearchChange.bind(this);
+	}
+
+	handleSearchChange = (e) => {
+		this.setState({
+			searchTxt: e.target.value
+		});
 	}
 
 	handleTagClick = (tag, add) => {
@@ -60,18 +69,33 @@ export default class IndexPage extends React.Component {
 		});
 	}
 
+	filterPostsBySearch = (posts) => {
+		if(!this.state.searchTxt){
+			return posts;
+		}
+
+		return posts.filter((post) => {
+			return post.node.frontmatter.title.includes(this.state.searchTxt);
+		});
+	}
+
 	render() {
 		const { data } = this.props
 		let { edges: posts } = data.allMarkdownRemark
 		const tags = this.getAllTags(posts);
 		posts = this.filterPosts(posts);
+		posts = this.filterPostsBySearch(posts);
 
 		return (
 			<Layout>
 				<section className="section">
 					<Hero />
 					<div className="container posts-container">
-						<Filters data={tags} activeTags={this.state.activeTags} handler={this.handleTagClick} />
+						<div className="grid">
+							<Filters data={tags} activeTags={this.state.activeTags} handler={this.handleTagClick} />
+							<Search value={this.state.searchTxt} handler={this.handleSearchChange} />
+						</div>
+						
 						{posts
 							.map(({ node: post }) => (
 									<PostPreview data={post} />
