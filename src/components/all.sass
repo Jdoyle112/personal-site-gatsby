@@ -119,7 +119,7 @@ span.light
   max-width: 850px;
 
 .footer
-  padding: 15px 20px;
+  padding: 15px 40px;
   margin-top: 60px;
   ul
     list-style: none;
@@ -128,3 +128,55 @@ span.light
     li
       display: inline;
       margin-left: 10px;
+
+.section 
+  img 
+    max-width: 100%;
+    width: auto;
+  &.blog-post 
+    padding-top: 60px;
+    .grid
+      display: grid;
+      grid-template-columns: 250px auto;
+      grid-column-gap: 40px;
+
+      .content
+        h1
+          font-size: 40px;
+        p
+          line-height: 1.4;
+          font-size: 18px;
+        .spacer
+          background: #2f2fa2;
+          height: 2px;
+          width: 100%;
+          margin: 40px 0;
+        .taglist
+          padding: 0;
+          margin: 0;
+          list-style: none;
+          li
+            display: inline-block;
+            padding: 6px 12px;
+            color: #2f2fa2;
+            border: 1px solid #2f2fa2;
+            border-radius: 4px;
+            margin-right: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            a
+              color: #2f2fa2;
+              text-decoration: none;
+
+      .sidebar
+        ul
+          padding: 0;
+          margin: 0;
+          list-style: none;
+          li
+            display: inline-block;
+            margin: 15px 0;
+            cursor: pointer;
+            p
+              margin: 0 0 5px;
+

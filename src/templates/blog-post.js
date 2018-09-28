@@ -5,6 +5,7 @@ import Helmet from 'react-helmet'
 import { graphql, Link } from 'gatsby'
 import Layout from '../components/Layout'
 import Content, { HTMLContent } from '../components/Content'
+import Sidebar from '../components/post/sidebar'
 
 export const BlogPostTemplate = ({
   content,
@@ -13,19 +14,22 @@ export const BlogPostTemplate = ({
   tags,
   title,
   helmet,
+  date
 }) => {
   const PostContent = contentComponent || Content
-
   return (
-    <section className="section">
+    <section className="section blog-post">
       {helmet || ''}
-      <div className="container content">
-        <div className="columns">
-          <div className="column is-10 is-offset-1">
+      <div className="container">
+        <div className="grid">
+          <Sidebar />
+          <div className="column is-8 is-offset-2 content">
             <h1 className="title is-size-2 has-text-weight-bold is-bold-light">
               {title}
             </h1>
             <p>{description}</p>
+            <span className="light mono">{date}</span>
+            <div className="spacer"></div>
             <PostContent content={content} />
             {tags && tags.length ? (
               <div style={{ marginTop: `4rem` }}>
@@ -33,7 +37,8 @@ export const BlogPostTemplate = ({
                 <ul className="taglist">
                   {tags.map(tag => (
                     <li key={tag + `tag`}>
-                      <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link>
+                      {tag}
+                      {/* <Link to={`/tags/${kebabCase(tag)}/`}>{tag}</Link> */}
                     </li>
                   ))}
                 </ul>
@@ -52,11 +57,12 @@ BlogPostTemplate.propTypes = {
   description: PropTypes.string,
   title: PropTypes.string,
   helmet: PropTypes.instanceOf(Helmet),
+  date: PropTypes.string
 }
 
 const BlogPost = ({ data }) => {
   const { markdownRemark: post } = data
-
+  console.log(post)
   return (
     <Layout>
       <BlogPostTemplate
@@ -66,6 +72,7 @@ const BlogPost = ({ data }) => {
         helmet={<Helmet title={`${post.frontmatter.title} | Blog`} />}
         tags={post.frontmatter.tags}
         title={post.frontmatter.title}
+        date={post.frontmatter.date}
       />
     </Layout>
   )
